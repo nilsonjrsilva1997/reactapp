@@ -14,6 +14,8 @@ import {
 import UserHeader from "components/Headers/UserHeader.js";
 
 const Profile = () => {
+  const userData = JSON.parse(localStorage.getItem('user'));
+
   return (
     <>
       <UserHeader />
@@ -81,7 +83,7 @@ const Profile = () => {
                 </Row>
                 <div className="text-center">
                   <h3>
-                    Jessica Jones
+                    {userData.name}
                     <span className="font-weight-light">, 27</span>
                   </h3>
                   <div className="h5 font-weight-300">
@@ -158,12 +160,13 @@ const Profile = () => {
                             className="form-control-label"
                             htmlFor="input-email"
                           >
-                            Email address
+                            Email
                           </label>
                           <Input
                             className="form-control-alternative"
                             id="input-email"
                             placeholder="jesse@example.com"
+                            value={userData.email}
                             type="email"
                           />
                         </FormGroup>

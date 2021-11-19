@@ -31,6 +31,20 @@ const Login = (props) => {
       })
       .catch((err) => {
         toast.error("Usuário ou senha incorretos!");
+        return;
+    });
+
+    api
+      .get("/api/user/data", {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then((response) => {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+      })
+      .catch((err) => {
+        toast.error("Erro ao buscar dados de usuário!");
     });
   }
 
