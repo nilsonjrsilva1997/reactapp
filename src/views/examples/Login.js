@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
   Button,
@@ -15,13 +15,26 @@ import {
 } from "reactstrap";
 
 import { useForm, Controller } from "react-hook-form";
+import { ToastContainer, toast } from 'react-toastify';
+import api from "services/api";
+import { useHistory } from "react-router-dom";
 
-const Login = () => {
-  const { register, handleSubmit, control, formState: { errors } } = useForm();
-  const onSubmit = data => console.log(data);
+const Login = (props) => {
+  const { handleSubmit, control, formState: { errors } } = useForm();
+  const onSubmit = data => Login(data);
+  const { history } = useHistory();
 
-  console.log(errors);
-
+  const Login = (data) => {
+    api
+      .post("/api/login", data)
+      .then((response) => {
+        history.push("/admin/index");
+        localStorage.setItem("token", response.data.access_token);
+      })
+      .catch((err) => {
+        toast.error("Usuário ou senha incorretos!");
+    });
+  }
 
   return (
     <>
@@ -150,6 +163,7 @@ const Login = () => {
           </Col>
         </Row>
       </Col>
+      <ToastContainer />
     </>
   );
 };
