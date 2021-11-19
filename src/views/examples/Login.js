@@ -17,19 +17,17 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import api from "services/api";
-import { useHistory } from "react-router-dom";
 
 const Login = (props) => {
   const { handleSubmit, control, formState: { errors } } = useForm();
   const onSubmit = data => Login(data);
-  const { history } = useHistory();
-
-  const Login = (data) => {
+  
+  const Login = (data) => {    
     api
       .post("/api/login", data)
       .then((response) => {
-        history.push("/admin/index");
         localStorage.setItem("token", response.data.access_token);
+        props.history.push('/admin/index');
       })
       .catch((err) => {
         toast.error("Usuário ou senha incorretos!");
