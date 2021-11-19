@@ -13,7 +13,32 @@ import {
   Col,
 } from "reactstrap";
 
-const Register = () => {
+import { useForm, Controller } from "react-hook-form";
+import { ToastContainer, toast } from 'react-toastify';
+import api from "services/api";
+
+const Register = (props) => {
+  const { handleSubmit, control, register, formState: { errors } } = useForm();
+  const onSubmit = data => Register(data);
+
+  const Register = (data) => {
+    api
+      .post("/api/register", data)
+      .then((response) => {
+        localStorage.setItem("token", response.data.access_token);
+        props.history.push('/admin/index');
+      })
+      .catch((err) => {
+        let errors = err.response.data.errors;
+
+        Object.keys(errors).map((keyI, i) => {
+          errors[keyI].map((keyJ, j) => {
+            toast.error(errors[keyI][j]);
+          });
+        });
+      });
+  }
+
   return (
     <>
       <Col lg="6" md="8">
@@ -63,7 +88,7 @@ const Register = () => {
             <div className="text-center text-muted mb-4">
               <small>Or sign up with credentials</small>
             </div>
-            <Form role="form">
+            <form onSubmit={handleSubmit(onSubmit)}>
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
@@ -71,8 +96,14 @@ const Register = () => {
                       <i className="ni ni-hat-3" />
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input placeholder="Name" type="text" />
+                  <Controller
+                    name="name"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Input placeholder="Nome" type="text" {...field}/>}
+                  />                  
                 </InputGroup>
+                {errors.name && <span className="invalid-feedback">Nome é obrigatório</span>}               
               </FormGroup>
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
@@ -80,13 +111,16 @@ const Register = () => {
                     <InputGroupText>
                       <i className="ni ni-email-83" />
                     </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Email"
-                    type="email"
-                    autoComplete="new-email"
+                  </InputGroupAddon>                
+                  <Controller
+                    name="email"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Input placeholder="Email" type="email" autoComplete="new-email" {...field}/>}
                   />
                 </InputGroup>
+                {errors.email && <span className="invalid-feedback">Email é obrigatório</span>}               
+
               </FormGroup>
               <FormGroup>
                 <InputGroup className="input-group-alternative">
@@ -95,19 +129,36 @@ const Register = () => {
                       <i className="ni ni-lock-circle-open" />
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input
-                    placeholder="Password"
-                    type="password"
-                    autoComplete="new-password"
-                  />
+                  <Controller
+                    name="password"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Input placeholder="Senha" type="password"autoComplete="new-password" {...field}/>}
+                  />                  
                 </InputGroup>
+                {errors.password && <span className="invalid-feedback">A senha é obrigatória</span>}               
+
               </FormGroup>
-              <div className="text-muted font-italic">
-                <small>
-                  password strength:{" "}
-                  <span className="text-success font-weight-700">strong</span>
-                </small>
-              </div>
+
+              <FormGroup>
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-lock-circle-open" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Controller
+                    name="password_confirmation"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Input placeholder="Confirmar senha" type="password"autoComplete="new-password" {...field}/>}
+                  /> 
+                </InputGroup>
+
+                {errors.password_confirmation && <span className="invalid-feedback">A confirmação de senha é obrigatória</span>}               
+
+              </FormGroup>
+              
               <Row className="my-4">
                 <Col xs="12">
                   <div className="custom-control custom-control-alternative custom-checkbox">
@@ -115,30 +166,33 @@ const Register = () => {
                       className="custom-control-input"
                       id="customCheckRegister"
                       type="checkbox"
+                      {...register("acepted_terms", { required: true })}
                     />
                     <label
                       className="custom-control-label"
                       htmlFor="customCheckRegister"
                     >
                       <span className="text-muted">
-                        I agree with the{" "}
+                        Eu concordo com os termos{" "}
                         <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                          Privacy Policy
+                          Termos de uso
                         </a>
                       </span>
                     </label>
                   </div>
+                  {errors.acepted_terms && <span className="invalid-feedback">É necessário concordar com os termos de uso</span>}
                 </Col>
               </Row>
               <div className="text-center">
-                <Button className="mt-4" color="primary" type="button">
-                  Create account
+                <Button className="mt-4" color="primary" type="submit">
+                  Criar conta
                 </Button>
               </div>
-            </Form>
+            </form>
           </CardBody>
         </Card>
       </Col>
+      <ToastContainer />
     </>
   );
 };

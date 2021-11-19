@@ -22,7 +22,7 @@ const Login = (props) => {
   const { handleSubmit, control, formState: { errors } } = useForm();
   const onSubmit = data => Login(data);
   
-  const Login = (data) => {    
+  const Login = (data) => {
     api
       .post("/api/login", data)
       .then((response) => {
