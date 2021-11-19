@@ -1,10 +1,11 @@
+import React, { useState } from 'react';
+
 import {
   Button,
   Card,
   CardHeader,
   CardBody,
   FormGroup,
-  Form,
   Input,
   InputGroupAddon,
   InputGroupText,
@@ -13,7 +14,15 @@ import {
   Col,
 } from "reactstrap";
 
+import { useForm, Controller } from "react-hook-form";
+
 const Login = () => {
+  const { register, handleSubmit, control, formState: { errors } } = useForm();
+  const onSubmit = data => console.log(data);
+
+  console.log(errors);
+
+
   return (
     <>
       <Col lg="5" md="7">
@@ -61,9 +70,9 @@ const Login = () => {
           </CardHeader>
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <small>Or sign in with credentials</small>
+              <small>Ou faça login com suas credenciais</small>
             </div>
-            <Form role="form">
+            <form onSubmit={handleSubmit(onSubmit)}>
               <FormGroup className="mb-3">
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -71,12 +80,16 @@ const Login = () => {
                       <i className="ni ni-email-83" />
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input
-                    placeholder="Email"
-                    type="email"
-                    autoComplete="new-email"
+
+                  <Controller
+                    name="email"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Input placeholder="Email" type="email" autoComplete="new-email" {...field}/>}
                   />
                 </InputGroup>
+                {/* validation */}
+                {errors.email && <span className="invalid-feedback">Email é obrigatório</span>}               
               </FormGroup>
               <FormGroup>
                 <InputGroup className="input-group-alternative">
@@ -84,13 +97,16 @@ const Login = () => {
                     <InputGroupText>
                       <i className="ni ni-lock-circle-open" />
                     </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Password"
-                    type="password"
-                    autoComplete="new-password"
+                  </InputGroupAddon>              
+                  <Controller
+                    name="password"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Input placeholder="Senha"type="password"autoComplete="new-password" {...field}/>}
                   />
                 </InputGroup>
+                {/* validation */}
+                {errors.password && <span className="invalid-feedback">Senha é obrigatória</span>}    
               </FormGroup>
               <div className="custom-control custom-control-alternative custom-checkbox">
                 <input
@@ -106,11 +122,11 @@ const Login = () => {
                 </label>
               </div>
               <div className="text-center">
-                <Button className="my-4" color="primary" type="button">
+                <Button className="my-4" color="primary" type="submit">
                   Sign in
                 </Button>
               </div>
-            </Form>
+            </form>
           </CardBody>
         </Card>
         <Row className="mt-3">
