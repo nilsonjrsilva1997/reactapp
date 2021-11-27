@@ -5,6 +5,7 @@ import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
+import Restaurant from "views/examples/Restaurant.js";
 
 var routes = [
   {
@@ -55,6 +56,13 @@ var routes = [
     icon: "ni ni-circle-08 text-pink",
     component: Register,
     layout: "/auth",
+  },
+  {
+    path: "/restaurantes",
+    name: "Restaurantes",
+    icon: "ni ni-circle-08 text-pink",
+    component: Restaurant,
+    layout: "/admin",
   },
 ];
 export default routes;

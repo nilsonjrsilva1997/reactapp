@@ -165,11 +165,10 @@ const Profile = () => {
                           <Input
                             className="form-control-alternative"
                             id="input-email"
-                            placeholder="jesse@example.com"
-                            value={userData.email}
+                            placeholder={userData.email}
                             type="email"
                           />
-                        </FormGroup>
+                        </FormGroup> 
                       </Col>
                     </Row>
                     <Row>
